@@ -4,8 +4,9 @@ $requestedPath = rawurldecode($requestedPath);
 
 // Serve static assets directly from the project root.
 if (preg_match('#^/assets/(?:[A-Za-z0-9_-]+/)*[A-Za-z0-9_.-]+$#', $requestedPath)) {
-    $assetPath = realpath(__DIR__ . '/../' . ltrim($requestedPath, '/'));
-    $assetsRoot = realpath(__DIR__ . '/../assets');
+    $projectRoot = realpath(__DIR__ . '/..');
+    $assetPath = $projectRoot === false ? false : realpath($projectRoot . DIRECTORY_SEPARATOR . ltrim($requestedPath, '/'));
+    $assetsRoot = $projectRoot === false ? false : realpath($projectRoot . DIRECTORY_SEPARATOR . 'assets');
 
     if ($assetPath !== false && $assetsRoot !== false && ($assetPath === $assetsRoot || str_starts_with($assetPath, $assetsRoot . DIRECTORY_SEPARATOR)) && is_file($assetPath)) {
         $mimeType = function_exists('mime_content_type') ? mime_content_type($assetPath) : false;
