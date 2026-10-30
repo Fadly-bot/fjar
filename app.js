@@ -1,12 +1,12 @@
 /**
- * STUDIO GRAFIS UMKM - CLIENT LOGIC & INTERACTION ENGINE
- * - Hardcoded Client Session Demo (Order list, status tracking, revision counter)
+ * STUDIO GRAFIS UMKM - FRONTEND INTERACTIONS & WHATSAPP LOGIC
  * - Dynamic WhatsApp Link & Message Generator
  * - Portfolio Filtering & Lightbox Preview
  * - Order Modal with Real-time WhatsApp Text Preview
+ * - Client Order Tracking & Draft Inspection
  */
 
-// Initial Mock Orders (Hardcoded Demo Session for "Budi Santoso - Kopi Aroma Senja")
+// Mock Orders for Client Dashboard (Budi Santoso - Kopi Aroma Senja)
 let clientOrders = [
   {
     id: "#DSN-UMKM-082",
@@ -50,7 +50,7 @@ let clientOrders = [
 ];
 
 let activeOrderFilter = 'all';
-let currentSelectedPackage = 'Paket Logo & Identitas Brand (Rp 289.000)';
+const DEFAULT_WA_NUMBER = '6281234567890';
 
 // On Document Ready
 document.addEventListener('DOMContentLoaded', () => {
@@ -60,47 +60,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ==========================================================================
-   1. VIEW SWITCHER (Landing Page vs. Tampilan Setelah Login / Order List)
-   ========================================================================== */
-function switchView(viewName) {
-  const landingSection = document.getElementById('landingViewSection');
-  const clientSection = document.getElementById('clientViewSection');
-  const btnLanding = document.getElementById('btnViewLanding');
-  const btnClient = document.getElementById('btnViewClient');
-
-  if (viewName === 'client') {
-    landingSection.classList.remove('active');
-    clientSection.classList.add('active');
-    btnLanding.classList.remove('active');
-    btnClient.classList.add('active');
-    document.body.className = 'mode-client';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  } else {
-    clientSection.classList.remove('active');
-    landingSection.classList.add('active');
-    btnClient.classList.remove('active');
-    btnLanding.classList.add('active');
-    document.body.className = 'mode-landing';
-  }
-}
-
-function toggleClientView() {
-  const isClientActive = document.getElementById('clientViewSection').classList.contains('active');
-  switchView(isClientActive ? 'landing' : 'client');
-}
-
-/* ==========================================================================
-   2. WHATSAPP LOGIC & NUMBER CONFIG
+   1. WHATSAPP LOGIC
    ========================================================================== */
 function getWhatsAppNumber() {
-  const inputEl = document.getElementById('inputWaNumber');
-  let num = inputEl ? inputEl.value.trim() : '6281234567890';
-  // Clean special characters
-  num = num.replace(/[^0-9]/g, '');
-  if (num.startsWith('0')) {
-    num = '62' + num.substring(1);
-  }
-  return num || '6281234567890';
+  return DEFAULT_WA_NUMBER;
 }
 
 function sendOrderToWhatsApp(packageName, price) {
@@ -118,7 +81,7 @@ function chatDesignerDirect() {
 }
 
 /* ==========================================================================
-   3. ORDER LIST RENDERING & STATUS TRACKING (CLIENT DASHBOARD)
+   2. ORDER LIST RENDERING & STATUS TRACKING (CLIENT DASHBOARD)
    ========================================================================== */
 function renderOrderList() {
   const container = document.getElementById('orderCardsContainer');
@@ -127,9 +90,7 @@ function renderOrderList() {
   const searchQuery = (document.getElementById('orderSearchInput')?.value || '').toLowerCase();
 
   const filtered = clientOrders.filter(order => {
-    // Filter status
     const matchesStatus = (activeOrderFilter === 'all') || (order.status === activeOrderFilter);
-    // Search
     const matchesSearch = order.brandName.toLowerCase().includes(searchQuery) ||
                           order.package.toLowerCase().includes(searchQuery) ||
                           order.id.toLowerCase().includes(searchQuery);
@@ -216,13 +177,11 @@ function updateOrderStats() {
   const statReviewEl = document.getElementById('statReview');
   const statDoneEl = document.getElementById('statDone');
   const countAllEl = document.getElementById('countAll');
-  const navBadgeEl = document.getElementById('navOrderBadge');
 
   if (statWorkEl) statWorkEl.textContent = inWork;
   if (statReviewEl) statReviewEl.textContent = inReview;
   if (statDoneEl) statDoneEl.textContent = inDone;
   if (countAllEl) countAllEl.textContent = clientOrders.length;
-  if (navBadgeEl) navBadgeEl.textContent = clientOrders.length;
 }
 
 function filterOrderStatus(status) {
@@ -245,11 +204,11 @@ function sendRevisionWhatsApp(orderId, brandName, packageName) {
 }
 
 function downloadMasterFiles(orderId) {
-  alert(`✅ [DEMO] Mengunduh Master File untuk ${orderId}!\nFormat yang disertakan:\n- Vector Master (.AI, .EPS, .SVG)\n- High Res PDF Siap Cetak (CMYK 300 DPI)\n- PNG Transparan & JPG Preview\n\nLink Google Drive privat juga telah dikirimkan ke WhatsApp klien.`);
+  alert(`✅ [MASTER FILE SIAP]\n\nUnduhan Master File untuk pesanan ${orderId} sedang diproses:\n- Vector Master (.AI, .EPS, .SVG)\n- High Res PDF Siap Cetak (CMYK 300 DPI)\n- PNG Transparan & Mockup Preview\n\nLink Google Drive privat juga telah dikirimkan ke WhatsApp Anda.`);
 }
 
 /* ==========================================================================
-   4. MODALS (ORDER VIA WHATSAPP & REALTIME MESSAGE PREVIEW)
+   3. MODALS (ORDER VIA WHATSAPP & REALTIME MESSAGE PREVIEW)
    ========================================================================== */
 function openOrderModal(packageName) {
   const modal = document.getElementById('orderModal');
@@ -321,7 +280,6 @@ function handleOrderFormSubmit(event) {
   const pack = document.getElementById('formPaketSelect')?.value || 'Paket Desain Grafis';
   const previewText = document.getElementById('waMessagePreview')?.textContent || '';
 
-  // Simulate inserting into client order list if user wants to see it immediately!
   const newOrderObj = {
     id: `#DSN-UMKM-0${Math.floor(83 + Math.random() * 15)}`,
     brandName: name,
@@ -333,14 +291,14 @@ function handleOrderFormSubmit(event) {
     progressPercent: 20,
     revisionsLeft: '3x Revisi Gratis',
     currentStage: 'Menunggu konfirmasi rincian brief via WhatsApp.',
-    note: document.getElementById('formCatatan')?.value.trim() || 'Pesanan baru via form'
+    note: document.getElementById('formCatatan')?.value.trim() || 'Pesanan baru via web'
   };
 
   clientOrders.unshift(newOrderObj);
   renderOrderList();
   updateOrderStats();
 
-  // Open WhatsApp with populated message
+  // Open WhatsApp
   const waNum = getWhatsAppNumber();
   const url = `https://api.whatsapp.com/send?phone=${waNum}&text=${encodeURIComponent(previewText)}`;
   window.open(url, '_blank');
@@ -349,7 +307,7 @@ function handleOrderFormSubmit(event) {
 }
 
 /* ==========================================================================
-   5. PORTFOLIO FILTER & DETAIL MODAL
+   4. PORTFOLIO FILTER & DETAIL MODAL
    ========================================================================== */
 function filterPortfolio(category) {
   const filterBtns = document.querySelectorAll('.pf-filter-btn');
@@ -360,7 +318,7 @@ function filterPortfolio(category) {
   const cards = document.querySelectorAll('.pf-card');
   cards.forEach(card => {
     if (category === 'all' || card.getAttribute('data-category') === category) {
-      card.style.display = 'block';
+      card.style.display = 'flex';
     } else {
       card.style.display = 'none';
     }
@@ -388,11 +346,11 @@ function closePreviewModal() {
 function orderSimilarDesign() {
   const brand = document.getElementById('prevBrandName')?.textContent || 'Desain Serupa';
   closePreviewModal();
-  openOrderModal(`Desain Seperti ${brand}`);
+  openOrderModal(`Desain Serupa ${brand}`);
 }
 
 /* ==========================================================================
-   6. DRAFT PREVIEW MODAL (CLIENT DASHBOARD)
+   5. DRAFT PREVIEW MODAL (CLIENT DASHBOARD)
    ========================================================================== */
 function openDraftModal(orderId) {
   const order = clientOrders.find(o => o.id === orderId);

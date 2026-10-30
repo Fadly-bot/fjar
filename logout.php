@@ -1,0 +1,24 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Hapus semua variabel session
+$_SESSION = array();
+
+// Jika menggunakan session cookies, hapus juga cookienya
+if (ini_get("session.use_cookies")) {
+    $params = session_get_cookie_params();
+    setcookie(session_name(), '', time() - 42000,
+        $params["path"], $params["domain"],
+        $params["secure"], $params["httponly"]
+    );
+}
+
+// Hancurkan session
+session_destroy();
+
+// Redirect ke login page dengan status sukses logout
+header("Location: login.php");
+exit;
+
