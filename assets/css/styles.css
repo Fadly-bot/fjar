@@ -2717,8 +2717,17 @@ body {
   .nav-links {
     order: 3;
     width: 100%;
-    justify-content: space-between;
+    justify-content: flex-start;
     gap: 1rem;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+  }
+  .nav-links::-webkit-scrollbar {
+    display: none;
+  }
+  .nav-item {
+    flex: 0 0 auto;
   }
   .packages-grid {
     grid-template-columns: 1fr;
@@ -2744,6 +2753,41 @@ body {
   }
   .floating-wa-bubble .wa-status-pill {
     display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  .hero-title {
+    font-size: clamp(2rem, 10vw, 2.5rem);
+  }
+  .hero-cta-row,
+  .cta-btn-group {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .hero-cta-row > *,
+  .cta-btn-group > * {
+    width: 100%;
+    justify-content: center;
+  }
+  .artboard-body {
+    padding: 1rem;
+  }
+  .artboard-header {
+    gap: 0.5rem;
+  }
+  .window-title {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .window-badge {
+    flex: 0 0 auto;
   }
 }
 

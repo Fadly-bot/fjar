@@ -44,8 +44,6 @@ require_once __DIR__ . '/data.php';
         <ul class="footer-nav">
           <li><a href="index.php#home">Beranda</a></li>
           <li><a href="index.php#paket">Pilihan Paket & Harga</a></li>
-          <li><a href="index.php#portofolio">Portofolio Desain</a></li>
-          <li><a href="index.php#faq">Tanya Jawab (FAQ)</a></li>
           <li><a href="login.php">Area Login Portal</a></li>
         </ul>
       </div>

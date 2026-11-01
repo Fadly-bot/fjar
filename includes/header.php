@@ -44,8 +44,6 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
       <nav class="nav-links" id="mainNav">
         <a href="index.php#home" class="nav-item <?php echo $current_page === 'index' ? 'active' : ''; ?>">Beranda</a>
         <a href="index.php#paket" class="nav-item">Paket & Harga</a>
-        <a href="index.php#portofolio" class="nav-item">Portofolio</a>
-        <a href="index.php#faq" class="nav-item">FAQ</a>
       </nav>
 
       <!-- Right Action: Clean Login Button or User Session Info -->
