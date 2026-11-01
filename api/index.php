@@ -1,5 +1,8 @@
 <?php
-$requestedPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+// Vercel rewrites public URLs to this function and passes the original path
+// in the `path` query parameter. Prefer it so CSS/JS requests are not
+// mistaken for requests to this dispatcher itself.
+$requestedPath = parse_url($_GET['path'] ?? $_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
 $requestedPath = rawurldecode($requestedPath);
 
 // Serve static assets directly from the project root.
@@ -10,7 +13,12 @@ if (str_starts_with($assetRelativePath, 'assets/')) {
     $assetsRoot = $projectRoot === false ? false : realpath($projectRoot . DIRECTORY_SEPARATOR . 'assets');
 
     if ($assetPath !== false && $assetsRoot !== false && ($assetPath === $assetsRoot || str_starts_with($assetPath, $assetsRoot . DIRECTORY_SEPARATOR)) && is_file($assetPath)) {
-        $mimeType = function_exists('mime_content_type') ? mime_content_type($assetPath) : false;
+        $assetExtension = strtolower(pathinfo($assetPath, PATHINFO_EXTENSION));
+        $mimeTypes = [
+            'css' => 'text/css; charset=UTF-8',
+            'js' => 'application/javascript; charset=UTF-8',
+        ];
+        $mimeType = $mimeTypes[$assetExtension] ?? (function_exists('mime_content_type') ? mime_content_type($assetPath) : false);
         if ($mimeType !== false) {
             header('Content-Type: ' . $mimeType);
         }

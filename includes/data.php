@@ -6,10 +6,10 @@ if (session_status() === PHP_SESSION_NONE) {
 $site_config = [
     'brand_name' => 'STUDIOGRAFIS',
     'brand_tagline' => 'Partner Desain UMKM',
-    'lead_designer' => 'Dimas Prasetyo',
+    'lead_designer' => 'Fajar Shidiq',
     'designer_exp' => '5+ Tahun',
     'umkm_served' => '50+',
-    'wa_number' => '6281234567890',
+    'wa_number' => '6289676485204',
     'work_hours' => 'Setiap Hari (08.00 – 21.00 WIB)',
 ];
 
@@ -18,7 +18,7 @@ function get_initial_orders() {
         [
             'id' => '#DSN-UMKM-082',
             'client_name' => 'Budi Santoso',
-            'client_phone' => '6281234567890',
+            'client_phone' => '6289676485204',
             'brandName' => 'Kopi Aroma Senja',
             'package' => 'Paket Kemasan & Stiker Label',
             'price' => 'Rp 199.000',
@@ -33,7 +33,7 @@ function get_initial_orders() {
         [
             'id' => '#DSN-UMKM-079',
             'client_name' => 'Budi Santoso',
-            'client_phone' => '6281234567890',
+            'client_phone' => '6289676485204',
             'brandName' => 'Kopi Aroma Senja',
             'package' => 'Paket Logo & Identitas Brand',
             'price' => 'Rp 289.000',
